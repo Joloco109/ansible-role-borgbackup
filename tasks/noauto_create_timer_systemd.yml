@@ -2,7 +2,7 @@
 - name: Register existence of Borgmatic cron file.
   cron:
     name: "{{ borgmatic_timer_cron_name }}"
-    cron_file: "{{ borgmatic_timer_cron_name }}"
+    cron_file: "{{ borgmatic_timer_cron_file }}"
     state: absent
   check_mode: true
   register: cron_file_exists

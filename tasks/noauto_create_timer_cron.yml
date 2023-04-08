@@ -12,8 +12,8 @@
         hour: "{{ borgmatic_timer_hour }}"
         minute: "{{ borgmatic_timer_minute }}"
         user: "{{ borg_user }}"
-        cron_file: "{{ borgmatic_timer_cron_name }}"
-        job: "borgmatic -c /etc/borgmatic/{{ borgmatic_config_name }}"
+        cron_file: "{{ borgmatic_timer_cron_file }}"
+        job: "borgmatic -c /etc/borgmatic/{{ borgmatic_config_name }} -v 0 --syslog-verbosity 1"
 
     - name: Ensure separate check cron job is absent
       cron:
@@ -28,4 +28,15 @@
     name: PATH
     env: yes
     value: /usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+
+- name: Add MAILTO environment variable
+  when:
+    - borgmatic_timer_email is defined
+  cron:
+    name: MAILTO
+    env: yes
+    insertafter: PATH
+    user: "{{ borg_user }}"
+    cron_file: "{{ borgmatic_timer_cron_file }}"
+    value: "{{ borgmatic_timer_email }}"
 ...
